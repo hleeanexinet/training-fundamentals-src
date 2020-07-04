@@ -16,4 +16,4 @@ spec:
     ]
   containers:
   - name: producer
-    image: hleeanex/vp-producer:v2p2
+    image: hleeanex/vp-producer:v2p3
