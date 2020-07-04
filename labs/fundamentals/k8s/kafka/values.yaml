@@ -1,0 +1,2 @@
+kafkaServiceName: kafka-svc
+kafkaImage: confluentinc/cp-enterprise-kafka:5.5.1
