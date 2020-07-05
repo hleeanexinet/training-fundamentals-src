@@ -1,0 +1,34 @@
+# Create topic first
+#
+# kafka-topics --bootstrap-server kafka-svc:9092 --create --topic vehicle-positions --partitions 6 --replication-factor 1
+
+
+###
+POST http://connect-svc:8083/connectors
+Content-Type: application/json
+
+{
+    "name": "mqtt-source",
+    "config": {
+        "connector.class": "io.confluent.connect.mqtt.MqttSourceConnector",
+        "tasks.max": "1",
+        "mqtt.server.uri": "tcp://mqtt.hsl.fi:1883",
+        "mqtt.topics": "/hfp/v2/journey/ongoing/vp/tram/#",
+        "kafka.topic": "vehicle-positions",
+        "confluent.topic.bootstrap.servers": "kafka-svc:9092",
+        "confluent.topic.replication.factor": "1",
+        "confluent.license": ""
+    }
+}
+
+###
+GET http://connect-svc:8083/connectors
+
+
+###
+GET http://connect-svc:8083/connectors/mqtt-source/status
+
+
+# Run console consumer
+#
+# kafka-console-consumer --bootstrap-server kafka-svc:9092 --topic vehicle-positions --from-beginning
