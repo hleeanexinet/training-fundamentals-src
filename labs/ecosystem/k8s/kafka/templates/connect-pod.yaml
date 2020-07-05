@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: connect-pod
+  labels:
+    app: connect
+spec:
+  containers:
+  - name: connect
+    image: hleeanex/kafka-connect-mqtt:v2
+    ports:
+    - containerPort: 8083
+    env:
+    - name: CONNECT_BOOTSTRAP_SERVERS
+      value: kafka-svc:9092
+    - name: CONNECT_REST_PORT
+      value: '8083'
+    - name: CONNECT_GROUP_ID
+      value: connect
+    - name: CONNECT_CONFIG_STORAGE_TOPIC
+      value: connect-config
+    - name: CONNECT_OFFSET_STORAGE_TOPIC
+      value: connect-offsets
+    - name: CONNECT_STATUS_STORAGE_TOPIC
+      value: connect-status
+    - name: CONNECT_REPLICATION_FACTOR
+      value: '1'
+    - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+      value: '1'
+    - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+      value: '1'
+    - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+      value: '1'
+    - name: CONNECT_KEY_CONVERTER
+      value: io.confluent.connect.avro.AvroConverter
+    - name: CONNECT_VALUE_CONVERTER
+      value: io.confluent.connect.avro.AvroConverter
+    - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
+      value: http://schema-svc:8081
+    - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
+      value: http://schema-svc:8081
+    - name: CONNECT_INTERNAL_KEY_CONVERTER
+      value: org.apache.kafka.connect.json.JsonConverter
+    - name: CONNECT_INTERNAL_VALUE_CONVERTER
+      value: org.apache.kafka.connect.json.JsonConverter
+    - name: CONNECT_REST_ADVERTISED_HOST_NAME
+      value: connect-svc
+    - name: CONNECT_PLUGIN_PATH
+      value: /usr/share/java,/usr/share/confluent-hub-components
+    - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+      value: INFO
+    - name: CONNECT_LOG4J_LOGGER
+      value: org.reflections=ERROR
+    - name: CONNECT_PRODUCER_INTERCEPTOR_CLASSES
+      value: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+    - name: CONNECT_CONSUMER_INTERCEPTOR_CLASSES
+      value: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
