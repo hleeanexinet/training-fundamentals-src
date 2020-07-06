@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: producer
+spec:
+  initContainers:
+  - name: topic-creator
+    image: {{ .Values.kafkaImage }}
+    command: [
+      'kafka-topics',
+      '--bootstrap-server', '{{ .Values.kafkaServiceName }}:9092',
+      '--topic', 'vehicle-positions',
+      '--create',
+      '--partitions', '6',
+      '--replication-factor', '1'
+    ]
+  containers:
+  - name: producer
+    image: hleeanex/vp-producer:v2p3
